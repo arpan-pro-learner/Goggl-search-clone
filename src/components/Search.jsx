@@ -6,16 +6,14 @@ import { Links } from "./Links";
 
 export default function Search() {
   const [text, setText] = useState("");
-  const { setSearchTerm} = useResultsContext();
+  const { setSearchTerm } = useResultsContext();
   const [debouncedValue] = useDebounce(text, 500);
 
-  console.log(debouncedValue);
+  // console.log(debouncedValue);
 
- 
   useEffect(() => {
     if (debouncedValue) setSearchTerm(debouncedValue);
   }, [debouncedValue]);
-  
 
   return (
     <div className="relative sm:ml-48 md:ml-72 sm:mt-10 mt-3">
