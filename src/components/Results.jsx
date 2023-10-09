@@ -1,101 +1,59 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
 import { useResultsContext } from "../Contexts/ResultsContextProvider";
-
 import Loading from "./Loading";
 
 export default function Results() {
-  const { results, isLoading, getResults, searchTerm, setResults } =
-    useResultsContext();
+  const { results, isLoading, searchTerm, getResults, setResults } = useResultsContext();
   const location = useLocation();
 
-  console.log("In Results", location.pathname, searchTerm, results);
-
   useEffect(() => {
-    if (searchTerm !== "") {
-      setResults(null);
-      (async () => {
+    const fetchData = async () => {
+      if (searchTerm !== "") {
+        
+        setResults(null);
+
+   
         await getResults(location.pathname, searchTerm);
-      })();
-    }
-  }, [location.pathname, searchTerm]);
+
+  
+      }
+    };
+
+    fetchData();
+  }, [searchTerm, location.pathname]);
 
   if (isLoading) return <Loading />;
-  switch (location.pathname) {
-    case "/search":
-      if (!results) {
-        return null; 
-      }
 
-      return (
-        <div className="flex flex-wrap justify-between space-y-6 sm:px-56">
-          {results?.value?.map(({ url, title, description }, index) => (
-            <div key={index} className="md:w-2/5 w-full">
-              <a href={url} target="_blank" rel="noreferrer">
-                <p className="text-md pb-2">
-                  {url.length > 30 && url !== null ? url.substring(0, 30) : url}
-                </p>
-                <p className="text-2xl hover:underline dark:text-blue-300 text-blue-700">
-                  {title}
-                </p>
-                <p>
-                  {description &&
-                  description.length > 10 &&
-                  description !== null
-                    ? description.substring(0, 200)
-                    : description}
-                </p>
-              </a>
-            </div>
-          ))}
-        </div>
-      );
-    case "/images":
-      if (!results) {
-        return null; 
-      }
-
-      return (
-        <div className="grid grid-cols-4 gap-4 sm:grid grid-cols-2 gap-1">
-          {results?.value?.map(({ url, title }, index) => (
-            <a
-              href={url}
-              target="_blank"
-              key={index}
-              rel="noreferrer"
-              className="sm:p-3 p-5"
-            >
-              <img src={url} alt={title} loading="lazy" />
-              <p className="sm:w-36 w-36 break-words text-sm mt-2">{title}</p>
-            </a>
-          ))}
-        </div>
-      );
-    case "/news":
-      if (!results) {
-        return null; 
-      }
-
-      return (
-        <div className="flex flex-wrap justify-between space-y-6 sm:px-56">
-          {results?.value?.map(({ url, title, description }, index) => (
-            <div key={index} className="md:w-3/5 w-full">
-              <a href={url} target="_blank" rel="noreferrer">
-                <p className="text-lg pb-2">
-                  {url.length > 30 && url !== null ? url.substring(0, 30) : url}
-                </p>
-                <p className="text-2xl hover:underline dark:text-blue-300 text-blue-700">
-                  {title}
-                </p>
-              </a>
-            </div>
-          ))}
-        </div>
-      );
-    default:
-      break;
+  // Remove the "No results found" message when no search is performed
+  if (!searchTerm) {
+    return null;
   }
 
-  return <div>results</div>;
+  // Check if there are results in the data
+  if (!results || !results.results || results.results.length === 0) {
+    return <p>No results found</p>;
+  }
+
+  // console.log("In Results", location.pathname, searchTerm, results);
+  return (
+    <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-6 sm:px-56">
+  
+    
+
+      {/* Display Search Results */}
+      <div className="md:w-3/5 w-full">
+        {results.results.map((result, index) => (
+          <div key={index} className="mb-6">
+            <a href={result.url} target="_blank" rel="noreferrer">
+              <h2 className="text-xl font-semibold hover:underline text-blue-700 dark:text-blue-300">
+                {result.title}
+              </h2>
+              <p className="text-black-400  dark:text-gray-300">{result.description}</p>
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

@@ -11,12 +11,13 @@ export default function ImageResults() {
     if (searchTerm !== "" && searchTerm !== undefined) {
       getResults('image', searchTerm);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, searchTerm]);
 
   if (isLoading) return <Loading />;
 
   return (
-    <div className="grid grid-cols-4 gap-4 sm:grid grid-cols-2 gap-1">
+    <div className="grid grid-cols-4 gap-4 sm:grid">
       {results?.value?.map(({ url, title }, index) => (
         <a
           href={url}

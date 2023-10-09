@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-
 import { useResultsContext } from "../Contexts/ResultsContextProvider";
 import { Links } from "./Links";
 
@@ -9,11 +8,9 @@ export default function Search() {
   const { setSearchTerm } = useResultsContext();
   const [debouncedValue] = useDebounce(text, 500);
 
-  // console.log(debouncedValue);
-
   useEffect(() => {
     if (debouncedValue) setSearchTerm(debouncedValue);
-  }, [debouncedValue]);
+  }, [debouncedValue, setSearchTerm]);
 
   return (
     <div className="relative sm:ml-48 md:ml-72 sm:mt-10 mt-3">
