@@ -1,9 +1,6 @@
 import React from "react";
 import { FaGithub, FaInstagram, FaLinkedin,} from 'react-icons/fa';
 
-
-
-
 export const Footer = () => {
   return (
    
